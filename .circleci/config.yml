@@ -2,12 +2,12 @@ version: 2.1
 
 executors:
   golang:
-    working_directory: /go/src/moul.io/golang-repo-template
+    working_directory: /go/src/moul.io/cryptoguesser
     docker:
       - image: circleci/golang:1.12
     environment:
       GO111MODULE: "on"
-      DOCKER_IMAGE: moul/golang-repo-template
+      DOCKER_IMAGE: moul/cryptoguesser
 
   docker:
     docker:
@@ -43,7 +43,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - docker/build:
-          image: moul/golang-repo-template
+          image: moul/cryptoguesser
       #- docker/dockerlint
 
 workflows:
