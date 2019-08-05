@@ -14,7 +14,9 @@ import (
 func main() {
 	app := cli.App{
 		Name: "cryptoguess",
-		// FIXME: add --verbose/--debug
+		Flags: []cli.Flag{
+			&cli.BoolFlag{Name: "debug", Aliases: []string{"D"}},
+		},
 		Action: guess,
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -58,6 +60,11 @@ func guess(c *cli.Context) error {
 
 		question := cryptoguess.New(data)
 		fmt.Printf("%s %s\n", left, question.Short())
+		if c.Bool("debug") {
+			for _, experiment := range question.Experiments {
+				fmt.Printf("- %s\n", experiment)
+			}
+		}
 	}
 	return nil
 }

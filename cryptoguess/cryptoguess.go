@@ -16,7 +16,7 @@ type Question struct {
 func (q *Question) Short() string {
 	valids := []string{}
 	for _, experiment := range q.Experiments {
-		if experiment.Err() != nil {
+		if experiment.Err() == nil {
 			valids = append(valids, experiment.Name())
 		}
 	}
