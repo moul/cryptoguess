@@ -1,42 +1,63 @@
 package main // import "moul.io/cryptoguess"
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 
+	cli "gopkg.in/urfave/cli.v2"
 	"moul.io/cryptoguess/cryptoguess"
 )
 
 func main() {
-	if err := guess(); err != nil {
+	app := cli.App{
+		Name: "cryptoguess",
+		// FIXME: add --verbose/--debug
+		Action: guess,
+	}
+	if err := app.Run(os.Args); err != nil {
 		log.Printf("Error: %v", err)
 		os.Exit(1)
 	}
 }
 
-func guess() error {
-	flag.Parse()
-	var data []byte
-	var err error
-	switch flag.NArg() {
-	case 0:
-		data, err = ioutil.ReadAll(os.Stdin)
-		if err != nil {
-			return err
+func guess(c *cli.Context) error {
+	files := []string{}
+	for _, arg := range c.Args().Slice() {
+		if arg == "-" {
+			arg = "/dev/stdin"
 		}
-	case 1:
-		data, err = ioutil.ReadFile(flag.Arg(0))
-		if err != nil {
-			return err
+		files = append(files, arg)
+	}
+	if len(files) == 0 {
+		files = append(files, "/dev/stdin")
+	}
+	longest := 0
+	for _, file := range files {
+		if len(file) > longest {
+			longest = len(file)
 		}
-	default:
-		return fmt.Errorf("input must be from stdin or file")
 	}
 
-	question := cryptoguess.New(data)
-	fmt.Println(question)
+	for _, file := range files {
+		var data []byte
+		var err error
+		switch {
+		case file == "/dev/stdin":
+			data, err = ioutil.ReadAll(os.Stdin)
+		default:
+			data, err = ioutil.ReadFile(file)
+		}
+		left := file + ":" + strings.Repeat(" ", longest-len(file))
+		if err != nil {
+			fmt.Printf("%s err: %v\n", left, err)
+			continue
+		}
+
+		question := cryptoguess.New(data)
+		fmt.Printf("%s %s\n", left, question.Short())
+	}
 	return nil
 }

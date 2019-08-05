@@ -2,6 +2,7 @@ package cryptoguess // import "moul.io/cryptoguess/cryptoguess"
 import (
 	"fmt"
 	"reflect"
+	"strings"
 )
 
 type ExperimentFunc func(input []byte) Experiment
@@ -10,6 +11,23 @@ var AvailableExperiments []ExperimentFunc
 
 type Question struct {
 	Experiments []Experiment
+}
+
+func (q *Question) Short() string {
+	valids := []string{}
+	for _, experiment := range q.Experiments {
+		if experiment.Err() != nil {
+			valids = append(valids, experiment.Name())
+		}
+	}
+	switch len(valids) {
+	case 0:
+		return "unknown format"
+	case 1:
+		return valids[0]
+	default:
+		return fmt.Sprintf("potential candidates: %s", strings.Join(valids, ", "))
+	}
 }
 
 type Experiment interface {
