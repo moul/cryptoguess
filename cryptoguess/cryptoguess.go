@@ -32,11 +32,12 @@ func (q *Question) Short() string {
 
 type Experiment interface {
 	Name() string
-	Run() (interface{}, error)
+	Run() error
 	Result() interface{}
 	Err() error
 	Confidence() float64
 	String() string
+	Rest() []byte
 }
 
 func New(input []byte) Question {
@@ -45,7 +46,7 @@ func New(input []byte) Question {
 	}
 	for idx, fn := range AvailableExperiments {
 		question.Experiments[idx] = fn(input)
-		_, _ = question.Experiments[idx].Run()
+		_ = question.Experiments[idx].Run()
 	}
 	return question
 }
@@ -55,11 +56,13 @@ func New(input []byte) Question {
 //
 
 type base struct {
-	input  []byte
-	result interface{}
-	err    error
-	name   string
-	run    func([]byte) (interface{}, error)
+	input      []byte
+	result     interface{}
+	err        error
+	name       string
+	run        func([]byte, *base) error
+	rest       []byte
+	confidence float64
 }
 
 func (exp base) Name() string {
@@ -75,7 +78,7 @@ func (exp base) Err() error {
 }
 
 func (exp base) Confidence() float64 {
-	return 0.5
+	return exp.confidence
 }
 
 func (exp base) String() string {
@@ -93,7 +96,11 @@ func (exp base) String() string {
 	)
 }
 
-func (exp *base) Run() (interface{}, error) {
-	exp.result, exp.err = exp.run(exp.input)
-	return exp.result, exp.err
+func (exp *base) Run() error {
+	exp.err = exp.run(exp.input, exp)
+	return exp.err
+}
+
+func (exp *base) Rest() []byte {
+	return exp.rest
 }

@@ -17,12 +17,19 @@ func NewX509PKIXPublicKey(input []byte) Experiment {
 		base: &base{
 			input: input,
 			name:  "x509: DER encoded public key",
-			run: func(input []byte) (interface{}, error) {
+			run: func(input []byte, base *base) error {
+				// FIXME: input should be already decoded by pem
 				block, _ := pem.Decode(input)
 				if block == nil {
-					return nil, fmt.Errorf("no PEM formatted block found")
+					return fmt.Errorf("no PEM formatted block found")
 				}
-				return x509.ParsePKIXPublicKey(block.Bytes)
+				ret, err := x509.ParsePKIXPublicKey(block.Bytes)
+				if err != nil {
+					return err
+				}
+				base.result = ret
+				// FIXME: return specific type (RSA or equivalent)
+				return nil
 			},
 		},
 	}

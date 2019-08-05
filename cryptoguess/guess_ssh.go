@@ -19,16 +19,18 @@ func NewSSHAuthorizedKey(input []byte) Experiment {
 		base: &base{
 			input: input,
 			name:  "ssh: authorized key",
-			run: func(input []byte) (interface{}, error) {
+			run: func(input []byte, base *base) error {
 				pubkey, comment, options, _, err := ssh.ParseAuthorizedKey(input)
 				if err != nil {
-					return nil, err
+					return err
 				}
-				return &ParsedSSHAuthorizedKey{
+				base.result = &ParsedSSHAuthorizedKey{
 					PublicKey: pubkey,
 					Comment:   comment,
 					Options:   options,
-				}, nil
+				}
+				// FIXME: return more info: RSA, length, etc
+				return nil
 			},
 		},
 	}
