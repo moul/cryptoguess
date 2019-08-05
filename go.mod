@@ -1,3 +1,3 @@
-module moul.io/cryptoguesser
+module moul.io/cryptoguess
 
 go 1.12

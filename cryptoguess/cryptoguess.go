@@ -1,4 +1,4 @@
-package cryptoguess // import "moul.io/cryptoguesser/cryptoguess"
+package cryptoguess // import "moul.io/cryptoguess/cryptoguess"
 import (
 	"fmt"
 	"reflect"

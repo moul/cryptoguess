@@ -1,4 +1,4 @@
-package main // import "moul.io/cryptoguesser"
+package main // import "moul.io/cryptoguess"
 
 import (
 	"bufio"
@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"moul.io/cryptoguesser/cryptoguess"
+	"moul.io/cryptoguess/cryptoguess"
 )
 
 func main() {
