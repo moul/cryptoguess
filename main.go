@@ -16,6 +16,7 @@ func main() {
 		Name: "cryptoguess",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{Name: "debug", Aliases: []string{"D"}},
+			&cli.BoolFlag{Name: "list", Aliases: []string{"l"}},
 		},
 		Action: guess,
 	}
@@ -26,6 +27,14 @@ func main() {
 }
 
 func guess(c *cli.Context) error {
+	if c.Bool("list") {
+		fmt.Println("Available experiments:")
+		for _, guesser := range cryptoguess.AvailableExperiments {
+			tmp := guesser(nil)
+			fmt.Printf("- %s\n", tmp.Name())
+		}
+		return nil
+	}
 	files := []string{}
 	for _, arg := range c.Args().Slice() {
 		if arg == "-" {
