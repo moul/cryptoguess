@@ -27,7 +27,7 @@ func New(input []byte) Question {
 	}
 	for idx, fn := range AvailableExperiments {
 		question.Experiments[idx] = fn(input)
-		question.Experiments[idx].Run()
+		_, _ = question.Experiments[idx].Run()
 	}
 	return question
 }
