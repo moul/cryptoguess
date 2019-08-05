@@ -6,6 +6,10 @@ import (
 	"fmt"
 )
 
+func init() {
+	AvailableExperiments = append(AvailableExperiments, NewX509PKIXPublicKey)
+}
+
 type X509PKIXPublicKey struct{ *base }
 
 func NewX509PKIXPublicKey(input []byte) Experiment {
