@@ -1,6 +1,6 @@
 # cryptoguess
 
-:smile: cryptoguess does
+:smile: cryptoguess automatically detects and parses cryptography keys from files
 
 [![CircleCI](https://circleci.com/gh/moul/cryptoguess.svg?style=shield)](https://circleci.com/gh/moul/cryptoguess)
 [![GoDoc](https://godoc.org/moul.io/cryptoguess?status.svg)](https://godoc.org/moul.io/cryptoguess)
@@ -16,8 +16,52 @@
 ## Usage
 
 ```console
+$ cryptoguess test/*
+test/jwt-token.txt:              JWT Token
+test/pem-rsa-pubkey.txt:         PEM encoded data
+test/rsa-pubkey.txt:             SSH RSA public key
+test/ssh-rsa-authorized-key.txt: SSH authorized key
+```
+
+```console
+$ file test/*
+test/jwt-token.txt:              ASCII text, with very long lines, with no line terminators
+test/pem-rsa-pubkey.txt:         ASCII text
+test/rsa-pubkey.txt:             ASCII text, with very long lines, with no line terminators
+test/ssh-rsa-authorized-key.txt: OpenSSH RSA public key
+```
+
+---
+
+```console
+$ cryptoguess --debug test/ssh-rsa-authorized-key.txt
+test/ssh-rsa-authorized-key.txt: SSH authorized key
+- PEM encoded data: err: no PEM data found
+- SSH authorized key: *cryptoguess.ParsedSSHAuthorizedKey: &{0xc00005c8c0 lorem ipsum []}
+- x509 DER encoded public key: err: asn1: structure error: tags don't match (16 vs {class:1 tag:19 length:115 isCompound:true}) {optional:false explicit:false application:false private:false defaultValue:<nil> tag:<nil> stringType:0 timeType:0 set:false omitEmpty:false} publicKeyInfo @2
+```
+
+---
+
+```console
 $ cryptoguess -h
-...
+NAME:
+   cryptoguess - A new cli application
+
+USAGE:
+   cryptoguess [global options] command [command options] [arguments...]
+
+VERSION:
+   0.0.0
+
+COMMANDS:
+     help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --debug, -D    (default: false)
+   --list, -l     (default: false)
+   --help, -h     show help (default: false)
+   --version, -v  print the version (default: false)
 ```
 
 ## Install
@@ -25,6 +69,10 @@ $ cryptoguess -h
 ```console
 $ go get -u moul.io/cryptoguess
 ```
+
+## As a library
+
+See https://godoc.org/moul.io/cryptoguess/cryptoguess
 
 ## License
 
