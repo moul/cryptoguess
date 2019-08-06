@@ -1,36 +1,33 @@
 package cryptoguess
 
-import (
-	"crypto/x509"
-	"encoding/pem"
-	"fmt"
-)
+import "crypto/x509"
 
 func init() {
 	AvailableExperiments = append(AvailableExperiments, NewX509PKIXPublicKey)
 }
 
-type X509PKIXPublicKey struct{ *base }
+type X509PKIXPublicKey struct{ *baseExperiment }
+
+func runX509PKIXPublicKey(exp Experiment) []Result {
+	results := []Result{}
+	// FIXME: input should be already decoded by pem
+	ret, err := x509.ParsePKIXPublicKey(exp.Input())
+	result := &baseResult{
+		exp:  exp,
+		data: ret,
+		err:  err,
+		// FIXME: name: RSA/ECDSA/...
+	}
+	results = append(results, result)
+	return results
+}
 
 func NewX509PKIXPublicKey(input []byte) Experiment {
 	return &X509PKIXPublicKey{
-		base: &base{
+		baseExperiment: &baseExperiment{
 			input: input,
-			name:  "x509: DER encoded public key",
-			run: func(input []byte, base *base) error {
-				// FIXME: input should be already decoded by pem
-				block, _ := pem.Decode(input)
-				if block == nil {
-					return fmt.Errorf("no PEM formatted block found")
-				}
-				ret, err := x509.ParsePKIXPublicKey(block.Bytes)
-				if err != nil {
-					return err
-				}
-				base.result = ret
-				// FIXME: return specific type (RSA or equivalent)
-				return nil
-			},
+			name:  "x509 DER encoded public key",
+			run:   runX509PKIXPublicKey,
 		},
 	}
 }

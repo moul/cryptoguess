@@ -6,7 +6,7 @@ func init() {
 	AvailableExperiments = append(AvailableExperiments, NewSSHAuthorizedKey)
 }
 
-type SSHAuthorizedKey struct{ *base }
+type SSHAuthorizedKey struct{ *baseExperiment }
 
 type ParsedSSHAuthorizedKey struct {
 	PublicKey ssh.PublicKey
@@ -14,24 +14,29 @@ type ParsedSSHAuthorizedKey struct {
 	Options   []string
 }
 
+func runSSHAuthorizedKey(exp Experiment) []Result {
+	results := []Result{}
+	pubkey, comment, options, _, err := ssh.ParseAuthorizedKey(exp.Input())
+	result := &baseResult{
+		exp: exp,
+		data: &ParsedSSHAuthorizedKey{
+			PublicKey: pubkey,
+			Comment:   comment,
+			Options:   options,
+		},
+		err: err,
+	}
+	results = append(results, result)
+	// FIXME: return more info: RSA, length, etc
+	return results
+}
+
 func NewSSHAuthorizedKey(input []byte) Experiment {
 	return &SSHAuthorizedKey{
-		base: &base{
+		baseExperiment: &baseExperiment{
 			input: input,
-			name:  "ssh: authorized key",
-			run: func(input []byte, base *base) error {
-				pubkey, comment, options, _, err := ssh.ParseAuthorizedKey(input)
-				if err != nil {
-					return err
-				}
-				base.result = &ParsedSSHAuthorizedKey{
-					PublicKey: pubkey,
-					Comment:   comment,
-					Options:   options,
-				}
-				// FIXME: return more info: RSA, length, etc
-				return nil
-			},
+			name:  "SSH authorized key",
+			run:   runSSHAuthorizedKey,
 		},
 	}
 }
