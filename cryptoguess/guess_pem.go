@@ -13,14 +13,9 @@ type PEMBlock struct{ *baseExperiment }
 
 func runPEMBlock(exp Experiment) []Result {
 	results := []Result{}
-
-	block, rest := pem.Decode(exp.Input())
-	result := &baseResult{
-		exp:  exp,
-		rest: rest,
-		data: block,
-	}
-	if block == nil {
+	result := &baseResult{exp: exp}
+	result.data, result.rest = pem.Decode(exp.Input())
+	if result.data == nil {
 		result.err = fmt.Errorf("no PEM data found")
 	}
 	results = append(results, result)
