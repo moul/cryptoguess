@@ -117,6 +117,26 @@ type Result interface {
 }
 
 //
+// recursive
+//
+
+func recursiveResults(parent Result, input []byte) []Result {
+	results := []Result{}
+	for _, childExperiment := range New(input).Experiments {
+		for _, childResult := range childExperiment.Results() {
+			results = append(
+				results,
+				&stackedResult{
+					parent: parent,
+					child:  childResult,
+				},
+			)
+		}
+	}
+	return results
+}
+
+//
 // stackedResult
 //
 
