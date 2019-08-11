@@ -21,16 +21,8 @@ func runPEMBlock(exp Experiment) []Result {
 		// FIXME: data.Type
 		// FIXME: data.Headers
 		result := &baseResult{exp: exp, rest: rest, data: data}
-		for _, childExperiment := range New(data.Bytes).Experiments {
-			for _, childResult := range childExperiment.Results() {
-				results = append(
-					results,
-					&stackedResult{
-						parent: result,
-						child:  childResult,
-					},
-				)
-			}
+		for _, childResult := range recursiveResults(result, data.Bytes) {
+			results = append(results, childResult)
 		}
 		results = append(results, result)
 	}
