@@ -13,13 +13,27 @@ type PEMBlock struct{ *baseExperiment }
 
 func runPEMBlock(exp Experiment) []Result {
 	results := []Result{}
-	result := &baseResult{exp: exp}
-	result.data, result.rest = pem.Decode(exp.Input())
-	if result.data == nil {
-		result.err = fmt.Errorf("no PEM data found")
+	data, rest := pem.Decode(exp.Input())
+	if data == nil {
+		result := &baseResult{exp: exp, rest: rest, err: fmt.Errorf("no PEM data found")}
+		results = append(results, result)
+	} else {
+		// FIXME: data.Type
+		// FIXME: data.Headers
+		result := &baseResult{exp: exp, rest: rest, data: data}
+		for _, childExperiment := range New(data.Bytes).Experiments {
+			for _, childResult := range childExperiment.Results() {
+				results = append(
+					results,
+					&stackedResult{
+						parent: result,
+						child:  childResult,
+					},
+				)
+			}
+		}
+		results = append(results, result)
 	}
-	results = append(results, result)
-	// FIXME: recursively call other parsers with prefix=pem-encoded (like multiaddr)
 	return results
 }
 
