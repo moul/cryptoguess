@@ -116,6 +116,55 @@ type Result interface {
 	Rest() []byte
 }
 
+//
+// stackedResult
+//
+
+type stackedResult struct {
+	parent Result
+	child  Result
+}
+
+func (res stackedResult) Confidence() float64 {
+	confidence := res.child.Confidence() * 1.1
+	if confidence > 1 {
+		return 1
+	}
+	return confidence
+}
+
+func (res stackedResult) Rest() []byte {
+	return res.child.Rest()
+}
+
+func (res stackedResult) Name() string {
+	return fmt.Sprintf("%s: %s", res.parent.Name(), res.child.Name())
+}
+
+func (res stackedResult) Err() error {
+	return res.child.Err()
+}
+
+func (res stackedResult) String() string {
+	return fmt.Sprintf("parent: %s\nchild: %s", res.parent.String(), res.child.String())
+}
+
+func (res stackedResult) Short() string {
+	if res.Err() == nil {
+		return res.Name()
+	}
+	return ""
+}
+
+func (res stackedResult) Data() interface{} {
+	// FIXME: aggregate data!?
+	return res.child.Data()
+}
+
+//
+// baseResult
+//
+
 type baseResult struct {
 	exp        Experiment
 	name       string
