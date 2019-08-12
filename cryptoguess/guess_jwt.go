@@ -26,6 +26,7 @@ func runJWTSignedToken(exp Experiment) []Result {
 		result.err = parsed.Token.UnsafeClaimsWithoutVerification(&parsed.Claims)
 	}
 	results = append(results, result)
+	// FIXME: recursively call cryptoguess
 	return results
 }
 

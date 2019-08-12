@@ -66,29 +66,32 @@ GLOBAL OPTIONS:
 
 ## Decoders
 
-| Encoding      | Status             | Recursive    |
-|---------------|--------------------|--------------|
-| aes           | :red_circle:       | :red_circle: |
-| ascii85       | :red_circle:       | :red_circle: |
-| asn1          | :red_circle:       | :red_circle: |
-| base32        | :red_circle:       | :red_circle: |
-| base64        | :white_check_mark: | :red_circle: |
-| cipher        | :red_circle:       | :red_circle: |
-| csv           | :red_circle:       | :red_circle: |
-| des           | :red_circle:       | :red_circle: |
-| dsa           | :red_circle:       | :red_circle: |
-| ecdsa         | :red_circle:       | :red_circle: |
-| elliptic      | :red_circle:       | :red_circle: |
-| encrypted jwt | :red_circle:       | :red_circle: |
-| gob           | :red_circle:       | :red_circle: |
-| json          | :red_circle:       | :red_circle: |
-| pem           | :white_check_mark: | :red_circle: |
-| rsa           | :red_circle:       | :red_circle: |
-| signed jwt    | :white_check_mark: | :red_circle: |
-| ssh           | :white_check_mark: | :red_circle: |
-| tls           | :red_circle:       | :red_circle: |
-| x509          | :white_check_mark: | :red_circle: |
-| xml           | :red_circle:       | :red_circle: |
+| Encoding          | Status             | Recursive          |
+|-------------------|--------------------|--------------------|
+| aes               | :red_circle:       | :red_circle:       |
+| ascii85           | :red_circle:       | :red_circle:       |
+| asn1              | :red_circle:       | :red_circle:       |
+| base32            | :red_circle:       | :red_circle:       |
+| base64            | :white_check_mark: | :white_check_mark: |
+| cipher            | :red_circle:       | :red_circle:       |
+| csv               | :red_circle:       | :red_circle:       |
+| des               | :red_circle:       | :red_circle:       |
+| dsa               | :red_circle:       | :red_circle:       |
+| ecdsa             | :red_circle:       | :red_circle:       |
+| elliptic          | :red_circle:       | :red_circle:       |
+| encodings (utf-8) | :red_circle:       | :red_circle:       |
+| encrypted jwt     | :red_circle:       | :red_circle:       |
+| gob               | :red_circle:       | :red_circle:       |
+| gzip,lzw,...      | :red_circle:       | :red_circle:       |
+| json              | :red_circle:       | :red_circle:       |
+| pem               | :white_check_mark: | :white_check_mark: |
+| rsa               | :red_circle:       | :red_circle:       |
+| signed jwt        | :white_check_mark: | :red_circle:       |
+| ssh               | :white_check_mark: | :red_circle:       |
+| tls               | :red_circle:       | :red_circle:       |
+| url escaped       | :red_circle:       | :red_circle:       |
+| x509              | :white_check_mark: | :red_circle:       |
+| xml               | :red_circle:       | :red_circle:       |
 
 
 ## Install
