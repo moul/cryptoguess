@@ -12,10 +12,15 @@ type BASE64Block struct{ *baseExperiment }
 
 func runBASE64Block(exp Experiment) []Result {
 	results := []Result{}
-	result := &baseResult{exp: exp}
-	result.data, result.err = base64.StdEncoding.DecodeString(string(exp.Input()))
-	results = append(results, result)
-	// FIXME: recursively call other parsers with prefix=base64-encoded (like multiaddr)
+	data, err := base64.StdEncoding.DecodeString(string(exp.Input()))
+	if err != nil {
+		result := &baseResult{exp: exp, err: err}
+		results = append(results, result)
+	} else {
+		result := &baseResult{exp: exp, data: data}
+		results = append(results, recursiveResults(result, data)...)
+		results = append(results, result)
+	}
 	return results
 }
 
