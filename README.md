@@ -16,19 +16,57 @@
 ## Usage
 
 ```console
-$ cryptoguess test/*
-test/jwt-token.txt:              JWT Token
-test/pem-rsa-pubkey.txt:         PEM encoded data
-test/rsa-pubkey.txt:             SSH RSA public key
-test/ssh-rsa-authorized-key.txt: SSH authorized key
+$ find test/ -type f | xargs cryptoguess
+test/pem-rsa-pubkey.txt:            potential candidates: PEM encoded data: x509: DER encoded public key, PEM encoded data
+test/jwt-token.txt:                 JWT signed token
+test/ssh-rsa-authorized-key.txt:    SSH authorized key
+test/rsa-pubkey.txt:                potential candidates: BASE64 encoded data: x509: DER encoded public key, BASE64 encoded data
+test/crypto-memory/D.der:           x509: PKCS#1 public key (RSA) in ASN.1 DER form
+test/crypto-memory/E:               PEM encoded data
+test/crypto-memory/A.pub:           SSH authorized key
+test/crypto-memory/A:               PEM encoded data
+test/crypto-memory/B.pem:           potential candidates: PEM encoded data: x509: PKCS#1 public key (RSA) in ASN.1 DER form, PEM encoded data
+test/crypto-memory/B.pub:           SSH authorized key
+test/crypto-memory/D.with-password: PEM encoded data
+test/crypto-memory/C.pub:           SSH authorized key
+test/crypto-memory/D:               potential candidates: PEM encoded data: x509: PKCS#1 private key (RSA) in ASN.1 DER form, PEM encoded data
+test/crypto-memory/D.pub:           SSH authorized key
+test/crypto-memory/A.der:           x509: PKCS#1 public key (RSA) in ASN.1 DER form
+test/crypto-memory/B:               PEM encoded data
+test/crypto-memory/C:               PEM encoded data
+test/crypto-memory/B.der:           x509: PKCS#1 public key (RSA) in ASN.1 DER form
+test/crypto-memory/F.pem:           potential candidates: PEM encoded data: x509: PKCS#1 public key (RSA) in ASN.1 DER form, PEM encoded data
+test/crypto-memory/D.pem:           potential candidates: PEM encoded data: x509: PKCS#1 public key (RSA) in ASN.1 DER form, PEM encoded data
+test/crypto-memory/F.pub:           SSH authorized key
+test/crypto-memory/A.pem:           potential candidates: PEM encoded data: x509: PKCS#1 public key (RSA) in ASN.1 DER form, PEM encoded data
+test/crypto-memory/F.der:           x509: PKCS#1 public key (RSA) in ASN.1 DER form
 ```
 
 ```console
-$ file test/*
-test/jwt-token.txt:              ASCII text, with very long lines, with no line terminators
-test/pem-rsa-pubkey.txt:         ASCII text
-test/rsa-pubkey.txt:             ASCII text, with very long lines, with no line terminators
-test/ssh-rsa-authorized-key.txt: OpenSSH RSA public key
+$ find test/ -type f | xargs file
+test/pem-rsa-pubkey.txt:            ASCII text
+test/jwt-token.txt:                 ASCII text, with very long lines, with no line terminators
+test/ssh-rsa-authorized-key.txt:    OpenSSH RSA public key
+test/rsa-pubkey.txt:                ASCII text, with very long lines, with no line terminators
+test/crypto-memory/D.der:           data
+test/crypto-memory/E:               OpenSSH private key
+test/crypto-memory/A.pub:           OpenSSH RSA public key
+test/crypto-memory/A:               OpenSSH private key
+test/crypto-memory/B.pem:           ASCII text
+test/crypto-memory/B.pub:           OpenSSH RSA public key
+test/crypto-memory/D.with-password: PEM RSA private key
+test/crypto-memory/C.pub:           OpenSSH ED25519 public key
+test/crypto-memory/D:               PEM RSA private key
+test/crypto-memory/D.pub:           OpenSSH RSA public key
+test/crypto-memory/A.der:           data
+test/crypto-memory/B:               OpenSSH private key
+test/crypto-memory/C:               OpenSSH private key
+test/crypto-memory/B.der:           data
+test/crypto-memory/F.pem:           ASCII text
+test/crypto-memory/D.pem:           ASCII text
+test/crypto-memory/F.pub:           OpenSSH RSA public key
+test/crypto-memory/A.pem:           ASCII text
+test/crypto-memory/F.der:           data
 ```
 
 ---
@@ -66,32 +104,41 @@ GLOBAL OPTIONS:
 
 ## Decoders
 
-| Encoding          | Status             | Recursive          |
-|-------------------|--------------------|--------------------|
-| aes               | :red_circle:       | :red_circle:       |
-| ascii85           | :red_circle:       | :red_circle:       |
-| asn1              | :red_circle:       | :red_circle:       |
-| base32            | :red_circle:       | :red_circle:       |
-| base64            | :white_check_mark: | :white_check_mark: |
-| cipher            | :red_circle:       | :red_circle:       |
-| csv               | :red_circle:       | :red_circle:       |
-| des               | :red_circle:       | :red_circle:       |
-| dsa               | :red_circle:       | :red_circle:       |
-| ecdsa             | :red_circle:       | :red_circle:       |
-| elliptic          | :red_circle:       | :red_circle:       |
-| encodings (utf-8) | :red_circle:       | :red_circle:       |
-| encrypted jwt     | :red_circle:       | :red_circle:       |
-| gob               | :red_circle:       | :red_circle:       |
-| gzip,lzw,...      | :red_circle:       | :red_circle:       |
-| json              | :red_circle:       | :red_circle:       |
-| pem               | :white_check_mark: | :white_check_mark: |
-| rsa               | :red_circle:       | :red_circle:       |
-| signed jwt        | :white_check_mark: | :red_circle:       |
-| ssh               | :white_check_mark: | :red_circle:       |
-| tls               | :red_circle:       | :red_circle:       |
-| url escaped       | :red_circle:       | :red_circle:       |
-| x509              | :white_check_mark: | :red_circle:       |
-| xml               | :red_circle:       | :red_circle:       |
+| Encoding                         | Status             | Recursive          |
+|----------------------------------|--------------------|--------------------|
+| aes                              | :red_circle:       | :red_circle:       |
+| ascii85                          | :red_circle:       | :red_circle:       |
+| asn1                             | :red_circle:       | :red_circle:       |
+| base32                           | :red_circle:       | :red_circle:       |
+| base64                           | :white_check_mark: | :white_check_mark: |
+| cipher                           | :red_circle:       | :red_circle:       |
+| csv                              | :red_circle:       | :red_circle:       |
+| des                              | :red_circle:       | :red_circle:       |
+| dsa                              | :red_circle:       | :red_circle:       |
+| ecdsa                            | :red_circle:       | :red_circle:       |
+| elliptic                         | :red_circle:       | :red_circle:       |
+| encodings (utf-8)                | :red_circle:       | :red_circle:       |
+| encrypted jwt                    | :red_circle:       | :red_circle:       |
+| gob                              | :red_circle:       | :red_circle:       |
+| gzip,lzw,...                     | :red_circle:       | :red_circle:       |
+| json                             | :red_circle:       | :red_circle:       |
+| pem                              | :white_check_mark: | :white_check_mark: |
+| rsa                              | :red_circle:       | :red_circle:       |
+| signed jwt                       | :white_check_mark: | :red_circle:       |
+| ssh                              | :white_check_mark: | :red_circle:       |
+| tls                              | :red_circle:       | :red_circle:       |
+| url escaped                      | :red_circle:       | :red_circle:       |
+| x509: DER certificate list       | :white_check_mark: | n/a                |
+| x509: Elliptic Curve private key | :white_check_mark: | n/a                |
+| x509: PKCS#1 RSA private key     | :white_check_mark: | n/a                |
+| x509: PKCS#8 private key         | :white_check_mark: | n/a                |
+| x509: PKCS#8 public key          | :white_check_mark: | n/a                |
+| x509: PKIX public key            | :white_check_mark: | n/a                |
+| x509: certificate                | :white_check_mark: | n/a                |
+| x509: certificate list           | :white_check_mark: | n/a                |
+| x509: certificate request        | :white_check_mark: | n/a                |
+| x509: certificates               | :white_check_mark: | n/a                |
+| xml                              | :red_circle:       | :red_circle:       |
 
 
 ## Install
