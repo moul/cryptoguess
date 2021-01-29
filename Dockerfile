@@ -9,7 +9,7 @@ COPY            . ./
 RUN             make install
 
 # minimalist runtime
-FROM            alpine:3.13.0
+FROM            alpine:3.13.1
 COPY            --from=builder /go/bin/cryptoguess /bin/
 ENTRYPOINT      ["/bin/cryptoguess"]
 CMD             []
