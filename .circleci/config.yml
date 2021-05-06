@@ -4,7 +4,7 @@ executors:
   golang:
     working_directory: /go/src/moul.io/cryptoguess
     docker:
-      - image: circleci/golang:1.14
+      - image: circleci/golang:1.16
     environment:
       GO111MODULE: "on"
       DOCKER_IMAGE: moul/cryptoguess
