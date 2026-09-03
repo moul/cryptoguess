@@ -9,5 +9,5 @@ require (
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
 	golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0
-	gopkg.in/urfave/cli.v2 v2.0.0-20190806201727-b62605953717
+	gopkg.in/urfave/cli.v3 v3.11.0
 )
