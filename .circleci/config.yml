@@ -4,7 +4,7 @@ executors:
   golang:
     working_directory: /go/src/moul.io/cryptoguess
     docker:
-      - image: circleci/golang:1.14
+      - image: circleci/golang:1.17
     environment:
       GO111MODULE: "on"
       DOCKER_IMAGE: moul/cryptoguess
@@ -14,12 +14,12 @@ executors:
       - image: docker:18.06.3-ce-git
 
 orbs:
-  codecov: codecov/codecov@1.0.5
-  moul: moul/build@1.5.0
+  codecov: codecov/codecov@1.2.5
+  moul: moul/build@1.16.0
   retry: moul/retry@0.6.0
-  docker: circleci/docker@0.5.13
+  docker: circleci/docker@0.6.1
   #dl: moul/dl@1.7.0
-  tools: gotest/tools@0.0.9
+  tools: gotest/tools@0.0.14
 
 jobs:
   go-build:
